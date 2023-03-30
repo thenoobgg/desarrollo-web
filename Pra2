@@ -1,0 +1,88 @@
+<?php
+session_start();
+
+// Lista de productos
+$productos = array(
+    "Producto 1" => 10,
+    "Producto 2" => 20,
+    "Producto 3" => 30,
+    "Producto 4" => 40,
+    "Producto 5" => 50,
+    "Producto 6" => 60,
+    "Producto 7" => 70,
+    "Producto 8" => 80,
+    "Producto 9" => 90,
+    "Producto 10" => 100
+);
+
+// Función para mostrar la lista de productos
+function mostrarProductos() {
+    global $productos;
+    echo "<h2>Lista de Productos</h2>";
+    foreach ($productos as $nombre => $precio) {
+        echo "<p>$nombre - $$precio</p>";
+    }
+}
+
+// Función para procesar el pago
+function procesarPago($monto) {
+    global $productos;
+    $total = array_sum($productos);
+    if ($monto < $total) {
+        echo "<p>El monto ingresado es insuficiente. Por favor ingrese un monto mayor a $$total.</p>";
+    } else {
+        echo "<p>¡Pago exitoso! Gracias por su compra.</p>";
+        unset($_SESSION['carrito']);
+    }
+}
+
+// Iniciar sesión y crear carrito de compras si no existe
+if (!isset($_SESSION['carrito'])) {
+    $_SESSION['carrito'] = array();
+}
+
+// Agregar productos al carrito si se ha enviado el formulario
+if (isset($_POST['agregar'])) {
+    $producto = $_POST['producto'];
+    array_push($_SESSION['carrito'], $producto);
+    echo "<p>$producto ha sido agregado al carrito.</p>";
+}
+
+// Mostrar el carrito de compras
+echo "<h2>Carrito de Compras</h2>";
+$total = 0;
+foreach ($_SESSION['carrito'] as $producto) {
+    echo "<p>$producto - $" . $productos[$producto] . "</p>";
+    $total += $productos[$producto];
+}
+echo "<p>Total: $" . $total . "</p>";
+
+// Mostrar la lista de productos
+mostrarProductos();
+
+// Procesar el pago si se ha enviado el formulario
+if (isset($_POST['pagar'])) {
+    $monto = $_POST['monto'];
+    procesarPago($monto);
+}
+?>
+
+<h2>Pagar</h2>
+<form method="post">
+    <label for="monto">Monto:</label>
+    <input type="number" name="monto" id="monto" required>
+    <input type="submit" name="pagar" value="Pagar">
+</form>
+
+<h2>Agregar al Carrito</h2>
+<form method="post">
+    <label for="producto">Producto:</label>
+    <select name="producto" id="producto">
+        <?php
+        foreach ($productos as $nombre => $precio) {
+            echo "<option value=\"$nombre\">$nombre - $$precio</option>";
+        }
+        ?>
+    </select>
+    <input type="submit" name="agregar" value="Agregar">
+</form>
