@@ -1,0 +1,48 @@
+<?php
+#Funciones en PHP
+function Bienvenida(){
+    echo "Bienvenidos a nuestra Tienda ONLINE<br>";
+}
+Bienvenida();#para llamar a la funcion obligatorio realiza esta linea
+echo "<br><br/>";
+$productos = array(
+    "Chullo" => 10,
+    "Camisas" => 50,
+    "Pantalon" => 60,
+    "Casacas" => 80,
+    "zapatos" => 70,
+    "zapatillas" => 60,
+    "Jeans" => 70,
+    "Mochilas" => 40,
+    "Sudadera" => 70,
+    "gorras" => 25 );
+function mostrarPRoductos(){
+    global $productos;
+    echo "<h2>Lista de Productos</h2>";
+    foreach ($productos as $nombre => $precio) {
+        echo "<p>$nombre - $precio</p>";
+        }}
+function procesarPago($monto) {
+    global $productos;
+    $total = array_sum($productos);
+        if ($monto < $total) {
+            echo "<p>El monto ingresado es insuficiente. Por favor ingrese un monto mayor a $$total.</p>";
+        } else {
+            echo "<p>¡Pago exitoso! Gracias por su compra.</p>";
+            }
+        }
+        
+mostrarProductos();
+
+if (isset($_POST['pagar'])) {
+    $monto = $_POST['monto'];
+    procesarPago($monto);
+}
+?>
+
+<h2>Pagar</h2>
+<form method="post">
+    <label for="monto">Monto:</label>
+    <input type="number" name="monto" id="monto" required>
+    <input type="submit" name="pagar" value="Pagar">
+</form>
